@@ -1,5 +1,5 @@
 Running through some guides on node itself as the first step in learning about node.  This will be
-my notes docuemnt, and I'll probably have some directories for mini-projects.
+my notes document, and I'll probably have some directories for mini-projects.
 
 Getting Started Guide
 https://nodejs.org/en/docs/guides/getting-started-guide/
