@@ -192,14 +192,15 @@ Middleware functions are functions that get the request and response object, and
 Middleware functions can execute any code, change the request and response objects, end the request
 response cycle, call the next middleware object in the stack.
 
-If the current function doesn't end the req/res cycle, then it has to call next().
+If the current function doesn't end the req/res cycle, then it has to call next().   Otherwise the
+request will hang.
 
 This looks pretty similar to some stuff we've already done, but I'll do it in a miniproject for
 practice.  I'll call the folder middleware and do this without using the express-generator.
 
 Okay so some fun things I think I learned from this.  This way of handling middle ware makes those
 functions be called no matter the request that comes in.  The method we used before, where we have
-multiple functions in the same routing handler, would only happen for that routing.
+multiple functions in the same routing handler, would only happen for that route.
 
 These functions can be useful for messing with the request, or doing some prevalidation before 
 actually handling it.  Or some other things I'm sure.
@@ -207,4 +208,57 @@ actually handling it.  Or some other things I'm sure.
 They go further to say that you can set up a module that takes parameters in a function then returns
 the function based on those params, so you can make the module configurable.  They say you can check
 out cookie-session and compression for examples of modules that do this.
+
+Apparently express is a routing and middleware framework with minimal functionality besides that.
+And express application is a collection of middleware calls.
+
+There are several types of middleware in express:
+    Application-level
+    Router-level
+    Error-handling
+    Built-in
+    Third-party
+
+APPLICATION LEVEL
+You can create application level middleware by binding it to the app object itself, like we did in
+the last miniproject.  You can use app.use() to handle any request coming in, or use the 
+app.METHOD() functions to handle specific HTTP requests like earlier projects.
+
+You don't even have to have a mount path (route I'm guessing?), but you can supply one as the first
+param.  And the rules for having multiple functions, an array of functions, or a mix of both apply
+here (but you need to deal with the next unless one of your guys ends the request, and if one does,
+the ones after it will not run).
+
+You can add the middleware in multiple calls, they would work like you had them in the same array/
+function list.
+
+If one of your middleware functions decides to end a router middleware stake, you can call 
+next('route') to pass the control over to the next route.  But this only works for app.METHOD or
+router.METHOD functions.
+
+ROUTER LEVEL
+This works the same as the above, except it is bound to a router instance.
+
+In this case to skip the rest of the routers's middleware, you would call next('router')
+
+
+ERROR HANDLING LEVEL
+These are defined the same way as the other middleware functions but they have three parameters
+instead of the three: (err, req, res, next).  We'll go over this more in the error handling part of
+the guide I'm going through.
+
+BUILT-IN LEVEL
+There are a few built-ins that you can use, you'd have to look a the documentation.  But here is 
+the list (there used to be more but they removed some and made the separate modules a few releases
+ago)
+    express.static     - Serves static files such as HTML, images etc.
+    express.json       - Parses through JSON in request payloads
+    express.urlencoded - parses requests that have a url-encoded payload (not sure what that is)
+    
+THIRD PARTY LEVEL
+This is modules that you can consume to add functionality to express.  They have an example here
+of cookie-parser, that you can npm install, then require() in your program.  They then just do a
+app.use() on it and that is that.  I wonder if it is that easy.  Probably depends on the module.
+
+And on to template engines.
 
