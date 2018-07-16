@@ -174,7 +174,7 @@ and middle ware, then you can pull in that as a module:
           res.send('About birds')
         })
 
-        module.exports = router
+            module.exports = router
     
     use:
         var birds = require('./birds')
@@ -261,4 +261,61 @@ of cookie-parser, that you can npm install, then require() in your program.  The
 app.use() on it and that is that.  I wonder if it is that easy.  Probably depends on the module.
 
 And on to template engines.
+
+Template engines take a static template file, and at runtime replace variables in the template with
+actual files.  In the end this builds a html file to send to the client.  This is done to make 
+designing the HTML page easier.
+
+There are tons of popular template engines: Pug, Mustache, EJS.  Express uses Jade as a default, 
+but it supports many others.
+
+In order to render template files, you need to set up some application settings, usually in app.js.
+views - the directory where the template files are stored. app.set('views', './views')
+view engine - the template engine to use. app.set('view engine', 'pug')
+
+You need to make sure the template engine npm package is installed as well.  npm install pug --save
+
+After doing this, you don't need to specify the engine or load the template module in the app, 
+express does this for you.
+
+Now we move on to our simple example:
+We'll use pug for this.  So I'll create a new directory to store this project called templateengine.
+
+I had to do some relearing there.  I did this by using the express generator and specifying the
+template engine for pug:
+express --view=pug myapp
+
+and it already put pug as a dependency.
+
+   change directory:
+     > cd myapp
+
+   install dependencies:
+     > npm install
+
+   run the app:
+     > SET DEBUG=myapp:* & npm start
+
+So we'll just do the install to make sure things are good.
+
+So the next steps in the example are to create a file named index.pug in the view directory created.
+That is straightforward enough.
+
+Apparently if pug is set up as the view engine we can ignore the extention in the below.  Now they
+want us to set up a route to render using the view engine.  They don't really specify where, but
+if I am reading code right, app.js wants to send '/' routes to ./routes/index.  We'll make our
+change there and see how that works.
+
+It already had a route set up there, so we rewrote it with:
+    /* GET home page. */
+    router.get('/', function(req, res, next) {
+      res.render('index', { title: 'Hey' , message: 'Hello there!'});
+    });
+
+And now we run and see if that worked:
+    SET DEBUG=myapp:* & npm start
+    
+It totally did.  Awesome sauce.
+
+Error handling next
 
