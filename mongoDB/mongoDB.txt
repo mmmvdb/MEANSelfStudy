@@ -1,0 +1,2 @@
+So I need to hunt to see if I can find a good guide, but I'm going to try the offical one first:
+http://mongodb.github.io/node-mongodb-native/2.2/quick-start/quick-start/
