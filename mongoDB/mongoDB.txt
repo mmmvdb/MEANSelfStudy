@@ -1,2 +1,113 @@
 So I need to hunt to see if I can find a good guide, but I'm going to try the offical one first:
 http://mongodb.github.io/node-mongodb-native/2.2/quick-start/quick-start/
+
+So I guess we start with the mongo shell tutorial.
+
+Insertion first.  You can insert multiple documents into a collection.  It takes an array:
+db.inventory.insertMany([
+   { item: "journal", qty: 25, status: "A",
+       size: { h: 14, w: 21, uom: "cm" }, tags: [ "blank", "red" ] },
+   { item: "notebook", qty: 50, status: "A",
+       size: { h: 8.5, w: 11, uom: "in" }, tags: [ "red", "blank" ] }
+]);
+
+Apparently there is an _id field that gets put on these as well... if you don't specify it, it 
+automatically gets added.
+
+that _id gets returned as a document from insertMany.
+
+db.collection.insertOne inserts a single document.
+
+Then they point us to a couple of other guides...
+
+One is on crud which it sounds like I've encountered but I hadn't heard the acronym before.
+
+It stands for Create, Read, Update, Delete... standard SQL stuff.
+
+Create
+    Create or insert operations add of course.  MongoDB has the insertOne and insertMany we saw 
+    above.  In MongoDB insert operations target a single "collection".  All write operations are
+    atomic on a single document.
+    
+    db.users.insertOne(           <- collection
+        {                                              <----
+            name: "Michael",      <- Field: value           |
+            age: 33,              <- Field: value           >- Document
+            status: "Married"     <- Field: value           |
+        }                                              <----
+    );
+    
+Read
+    Read operations are like selects.  They pull documents from a collection.
+    
+    db.collection.find() is the function for this.
+    
+    You can specify query filters:
+        db.users.find(           <- collection
+            {age:{$gt:18}},      <- query criteria
+            {name: 1, address:1} <- projection
+        ).limit(5)               <- cursor modifier
+        
+    Equality conditions use <field>:<value>
+    
+    Sometimes you might need to use query operators which have the form 
+        {<field>:{<operator>: <value>}, ...} for instance:
+            db.inventory.find({status: {$in:['a','d']}})
+            
+    If you need to and, you just pass multiple values
+    
+    If you need ands and ors in the same operation you can use a $or:[{<field>:<value}]
+    
+    Other things they are throwing at me now $gt $lt for greater than or less than, it looks like
+    you can regex the strings to do string compares.
+    
+    I need to get more in depth here, but I'm going to move on. Here is the page where they have 
+    more links to dive into:
+    https://docs.mongodb.com/manual/tutorial/query-documents/#read-operations-query-argument
+    
+Update
+    Mongo has three methods for this:
+        db.collection.updateOne()
+        db.collection.updateMany()
+        db.collection.replateOne()
+    
+    The sentax here is the same as for selecting... where you pass a collection for the filter, 
+    and a collection for the update action
+    
+Delete
+    Two here
+        db.collection.deleteOne()
+        db.collection.deleteMany()
+        
+They mention here that there are bulk write operations that can be used as well.  And I can look 
+into that later.
+
+Back into the main document now.
+
+To select all documents in a collection you pass an empty document as the query filter.  Otherwise
+you can use the above statments to do filtering.
+
+Matches on an embedded document need to be exact.
+
+However to do a match on part of an embedded document you can use dot notation.
+So if we had a collection that had size as a sub document in each document, you could do 
+"size.h": 12.
+
+If there is an array in the document, doing a find with one of the elements, will return any array
+containing it.  But if you specify more I think they are saying that it returns only arrays with 
+those specified in the order specified.
+
+Really thats all they get into here for the shell.  They have further reading at the bottom of this
+link:
+https://docs.mongodb.com/manual/tutorial/getting-started/
+
+I can learn about compass later as well.  I didn't realize that it was just a GUI for the database.
+
+They move on to talking about using node, but the API there looks basically the same as using the
+mongo shell.  Odd... I should probably look into mongoose for this since it was mentioned earlier.
+
+I need to read up on indexes and aggregations too.  There is a guide here:
+https://docs.mongodb.com/manual/indexes/
+
+I feel like I'm glossing over a bunch of information, but it seems like most of this information is 
+buried a bit under their quick start guide, so maybe it is safe to ignore it for now.
