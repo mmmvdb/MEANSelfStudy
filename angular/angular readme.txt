@@ -158,5 +158,38 @@ Directives
     (number, email, required), provide status for app data (invalid, dirty, touched, error),
     provide css classes, bind html elements to forms.
     
+    To create your own directives, you use app.directive.  Then to use it you just use the directive
+    name in a HTML tag: 
     
+    <body ng-app="myApp">
+
+    <w3-test-directive></w3-test-directive>
+
+    <script>
+    var app = angular.module("myApp", []);
+    app.directive("w3TestDirective", function() {
+        return {
+            template : "<h1>Made by a directive!</h1>"
+        };
+    });
+    </script>
+
+    </body>
     
+    You can use it as an element name, an attribute, a class, or a comment and they all act the same
+    
+    This can be restricted by adding a restrict property:
+    var app = angular.module("myApp", []);
+    app.directive("w3TestDirective", function() {
+        return {
+            restrict : "A",
+            template : "<h1>Made by a directive!</h1>"
+        };
+    });
+    
+    Restrict values are:
+        E for Element name
+        A for Attribute
+        C for Class
+        M for Comment
+    The default the value is EA
